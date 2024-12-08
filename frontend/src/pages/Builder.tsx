@@ -34,7 +34,7 @@ export function Builder() {
   const [currentStep, setCurrentStep] = useState(1);
   const [activeTab, setActiveTab] = useState<'code' | 'preview'>('code');
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
-  
+
   const [steps, setSteps] = useState<Step[]>([]);
   const [files, setFiles] = useState<FileItem[]>([]);
 
@@ -138,7 +138,6 @@ export function Builder() {
       prompt: prompt.trim()
     });
     setTemplateSet(true);
-    
     const {prompts, uiPrompts} = response.data;
 
     setSteps(parseXml(uiPrompts[0]).map((x: Step) => ({
@@ -179,7 +178,7 @@ export function Builder() {
         <h1 className="text-xl font-semibold text-gray-100">Website Builder</h1>
         <p className="text-sm text-gray-400 mt-1">Prompt: {prompt}</p>
       </header>
-      
+
       <div className="flex-1 overflow-hidden">
         <div className="h-full grid grid-cols-4 gap-6 p-6">
           <div className="col-span-1 space-y-6 overflow-auto">
