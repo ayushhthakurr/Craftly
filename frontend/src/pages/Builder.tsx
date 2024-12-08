@@ -36,7 +36,6 @@ export function Builder() {
   const [selectedFile, setSelectedFile] = useState<FileItem | null>(null);
   
   const [steps, setSteps] = useState<Step[]>([]);
-
   const [files, setFiles] = useState<FileItem[]>([]);
 
   useEffect(() => {
@@ -45,8 +44,8 @@ export function Builder() {
     steps.filter(({status}) => status === "pending").map(step => {
       updateHappened = true;
       if (step?.type === StepType.CreateFile) {
-        let parsedPath = step.path?.split("/") ?? []; // ["src", "components", "App.tsx"]
-        let currentFileStructure = [...originalFiles]; // {}
+        let parsedPath = step.path?.split("/") ?? [];
+        let currentFileStructure = [...originalFiles];
         let finalAnswerRef = currentFileStructure;
   
         let currentFolder = ""
@@ -56,7 +55,6 @@ export function Builder() {
           parsedPath = parsedPath.slice(1);
   
           if (!parsedPath.length) {
-            // final file
             let file = currentFileStructure.find(x => x.path === currentFolder)
             if (!file) {
               currentFileStructure.push({
@@ -69,10 +67,8 @@ export function Builder() {
               file.content = step.code;
             }
           } else {
-            /// in a folder
             let folder = currentFileStructure.find(x => x.path === currentFolder)
             if (!folder) {
-              // create the folder
               currentFileStructure.push({
                 name: currentFolderName,
                 type: 'folder',
@@ -86,21 +82,15 @@ export function Builder() {
         }
         originalFiles = finalAnswerRef;
       }
-
     })
 
     if (updateHappened) {
-
       setFiles(originalFiles)
-      setSteps(steps => steps.map((s: Step) => {
-        return {
-          ...s,
-          status: "completed"
-        }
-        
-      }))
+      setSteps(steps => steps.map((s: Step) => ({
+        ...s,
+        status: "completed"
+      })))
     }
-    console.log(files);
   }, [steps, files]);
 
   useEffect(() => {
@@ -109,7 +99,6 @@ export function Builder() {
   
       const processFile = (file: FileItem, isRootFolder: boolean) => {  
         if (file.type === 'folder') {
-          // For folders, create a directory entry
           mountStructure[file.name] = {
             directory: file.children ? 
               Object.fromEntries(
@@ -125,7 +114,6 @@ export function Builder() {
               }
             };
           } else {
-            // For files, create a file entry with contents
             return {
               file: {
                 contents: file.content || ''
@@ -137,16 +125,11 @@ export function Builder() {
         return mountStructure[file.name];
       };
   
-      // Process each top-level file/folder
       files.forEach(file => processFile(file, true));
-  
       return mountStructure;
     };
   
     const mountStructure = createMountStructure(files);
-  
-    // Mount the structure if WebContainer is available
-    console.log(mountStructure);
     webcontainer?.mount(mountStructure);
   }, [files, webcontainer]);
 
@@ -213,51 +196,63 @@ export function Builder() {
                   <br />
                   {(loading || !templateSet) && <Loader />}
                   {!(loading || !templateSet) && <div className='flex'>
-                    <textarea value={userPrompt} onChange={(e) => {
-                    setPrompt(e.target.value)
-                  }} className='p-2 w-full'></textarea>
-                  <button onClick={async () => {
-                    const newMessage = {
-                      role: "user" as "user",
-                      content: userPrompt
-                    };
+                    <textarea 
+                      value={userPrompt} 
+                      onChange={(e) => setPrompt(e.target.value)} 
+                      className='p-2 w-full'
+                    />
+                    <button 
+                      onClick={async () => {
+                        const newMessage = {
+                          role: "user" as "user",
+                          content: userPrompt
+                        };
 
-                    setLoading(true);
-                    const stepsResponse = await axios.post(`${BACKEND_URL}/chat`, {
-                      messages: [...llmMessages, newMessage]
-                    });
-                    setLoading(false);
+                        setLoading(true);
+                        const stepsResponse = await axios.post(`${BACKEND_URL}/chat`, {
+                          messages: [...llmMessages, newMessage]
+                        });
+                        setLoading(false);
 
-                    setLlmMessages(x => [...x, newMessage]);
-                    setLlmMessages(x => [...x, {
-                      role: "assistant",
-                      content: stepsResponse.data.response
-                    }]);
-                    
-                    setSteps(s => [...s, ...parseXml(stepsResponse.data.response).map(x => ({
-                      ...x,
-                      status: "pending" as "pending"
-                    }))]);
-
-                  }} className='bg-purple-400 px-4'>Send</button>
+                        setLlmMessages(x => [...x, newMessage]);
+                        setLlmMessages(x => [...x, {
+                          role: "assistant",
+                          content: stepsResponse.data.response
+                        }]);
+                        
+                        setSteps(s => [...s, ...parseXml(stepsResponse.data.response).map(x => ({
+                          ...x,
+                          status: "pending" as "pending"
+                        }))]);
+                      }} 
+                      className='bg-purple-400 px-4'
+                    >
+                      Send
+                    </button>
                   </div>}
                 </div>
               </div>
             </div>
           </div>
           <div className="col-span-1">
-              <FileExplorer 
-                files={files} 
-                onFileSelect={setSelectedFile}
-              />
-            </div>
+            <FileExplorer 
+              files={files} 
+              onFileSelect={setSelectedFile}
+            />
+          </div>
           <div className="col-span-2 bg-gray-900 rounded-lg shadow-lg p-4 h-[calc(100vh-8rem)]">
             <TabView activeTab={activeTab} onTabChange={setActiveTab} />
             <div className="h-[calc(100%-4rem)]">
               {activeTab === 'code' ? (
                 <CodeEditor file={selectedFile} />
               ) : (
-                <PreviewFrame webContainer={webcontainer} files={files} />
+                webcontainer ? (
+                  <PreviewFrame webContainer={webcontainer} files={files} />
+                ) : (
+                  <div className="flex items-center justify-center h-full text-gray-400">
+                    Loading WebContainer...
+                  </div>
+                )
               )}
             </div>
           </div>
