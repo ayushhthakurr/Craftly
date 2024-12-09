@@ -42,3 +42,4 @@ export function PreviewFrame({ files, webContainer }: PreviewFrameProps) {
     </div>
   );
 }
+

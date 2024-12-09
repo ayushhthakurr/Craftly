@@ -218,7 +218,7 @@ export function Builder() {
                           role: "assistant",
                           content: stepsResponse.data.response
                         }]);
-                        
+
                         setSteps(s => [...s, ...parseXml(stepsResponse.data.response).map(x => ({
                           ...x,
                           status: "pending" as "pending"
