@@ -9,7 +9,21 @@ import { basePrompt as reactBasePrompt } from "./defaults/react";
 const groq = new Groq();
 const app = express();
 
-app.use(cors());
+// CORS Configuration
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',  // Local development
+    'http://localhost:5173',  // Vite's default port
+    'https://craftly-virid.vercel.app' // Production frontend URL
+  ],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+// Apply CORS middleware with options
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.post("/template", async (req, res) => {
@@ -84,6 +98,8 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on port 3000");
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port :${PORT}`);
 });
