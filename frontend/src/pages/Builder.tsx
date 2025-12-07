@@ -198,7 +198,7 @@ export function Builder() {
                     setTemplateSet(false)
                   }}
                   className="px-5 py-2.5 bg-slate-700/50 hover:bg-slate-700 text-white rounded-lg transition-all duration-200 font-medium text-sm shadow-lg hover:shadow-xl border border-slate-600/50"
-                >\n                  Reset Project\n                </button>
+                >Reset Project</button>
               )}
             </div>
           </div>
