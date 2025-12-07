@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Wand2 } from 'lucide-react';
 import axios from "axios";
 import { BACKEND_URL } from '../config';
+import logo from '/Craftly.png';
 
 export function Home() {
   const [prompt, setPrompt] = useState('');
@@ -23,7 +24,7 @@ export function Home() {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl blur-2xl opacity-50 animate-pulse"></div>
               <div className="relative flex items-center justify-center w-20 h-20 rounded-2xl shadow-2xl overflow-hidden">
-                <img src="/Craftly.png" alt="Craftly Logo" className="w-full h-full object-cover" />
+                <img src={logo} alt="Craftly Logo" className="w-full h-full object-cover" />
               </div>
             </div>
           </div>
