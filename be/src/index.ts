@@ -14,7 +14,10 @@ const corsOptions = {
   origin: [
     'http://localhost:3000',  // Local development
     'http://localhost:5173',  // Vite's default port
-    'https://craftly-virid.vercel.app' // Production frontend URL
+    'http://localhost:5174',  // Vite alternate port
+    'https://craftly-psi.vercel.app',
+    'https://craftly-git-master-priyanshi-guptas-projects-ddb609dc.vercel.app',
+    'https://craftly-eqxvibakc-priyanshi-guptas-projects-ddb609dc.vercel.app'
   ],
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
