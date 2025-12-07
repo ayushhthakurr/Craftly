@@ -31,7 +31,7 @@ app.post("/template", async (req, res) => {
 
   try {
     const response = await groq.chat.completions.create({
-      model: "llama3-8b-8192",
+      model: "llama-3.3-70b-versatile",
       max_tokens: 200,
       messages: [
         {
@@ -46,8 +46,9 @@ app.post("/template", async (req, res) => {
     });
 
     const answer = response?.choices?.[0]?.message?.content?.trim().toLowerCase() || "";
+    console.log('Model response:', answer);
 
-    if (answer === "react") {
+    if (answer.includes("react")) {
       res.json({
         prompts: [
           `Here is an artifact that contains all files of the project visible to you.\nConsider the contents of ALL files in the project.\n\n${reactBasePrompt}\n\nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n`,
@@ -57,7 +58,7 @@ app.post("/template", async (req, res) => {
       return;
     }
 
-    if (answer === "node") {
+    if (answer.includes("node")) {
       res.json({
         prompts: [
           `Here is an artifact that contains all files of the project visible to you.\nConsider the contents of ALL files in the project.\n\n${nodeBasePrompt}\n\nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n`,
@@ -66,7 +67,15 @@ app.post("/template", async (req, res) => {
       });
       return;
     }
-    res.status(403).json({ message: "You can't access this" });
+    
+    // Default to react if unclear
+    console.log('Defaulting to react template');
+    res.json({
+      prompts: [
+        `Here is an artifact that contains all files of the project visible to you.\nConsider the contents of ALL files in the project.\n\n${reactBasePrompt}\n\nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n`,
+      ],
+      uiPrompts: [reactBasePrompt],
+    });
   } catch (error) {
     console.error("Error in /template:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -78,7 +87,7 @@ app.post("/chat", async (req, res) => {
 
   try {
     const response = await groq.chat.completions.create({
-      model: "llama3-8b-8192",
+      model: "llama-3.3-70b-versatile",
       max_tokens: 8000,
       messages: [
         {

@@ -21,14 +21,27 @@ const node_1 = require("./defaults/node");
 const react_1 = require("./defaults/react");
 const groq = new groq_sdk_1.default();
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+// CORS Configuration
+const corsOptions = {
+    origin: [
+        'http://localhost:3000', // Local development
+        'http://localhost:5173', // Vite's default port
+        'https://craftly-virid.vercel.app' // Production frontend URL
+    ],
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+// Apply CORS middleware with options
+app.use((0, cors_1.default)(corsOptions));
 app.use(express_1.default.json());
 app.post("/template", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d;
     const prompt = req.body.prompt;
     try {
         const response = yield groq.chat.completions.create({
-            model: "llama3-8b-8192",
+            model: "llama-3.3-70b-versatile",
             max_tokens: 200,
             messages: [
                 {
@@ -42,7 +55,8 @@ app.post("/template", (req, res) => __awaiter(void 0, void 0, void 0, function* 
             ],
         });
         const answer = ((_d = (_c = (_b = (_a = response === null || response === void 0 ? void 0 : response.choices) === null || _a === void 0 ? void 0 : _a[0]) === null || _b === void 0 ? void 0 : _b.message) === null || _c === void 0 ? void 0 : _c.content) === null || _d === void 0 ? void 0 : _d.trim().toLowerCase()) || "";
-        if (answer === "react") {
+        console.log('Model response:', answer);
+        if (answer.includes("react")) {
             res.json({
                 prompts: [
                     `Here is an artifact that contains all files of the project visible to you.\nConsider the contents of ALL files in the project.\n\n${react_1.basePrompt}\n\nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n`,
@@ -51,7 +65,7 @@ app.post("/template", (req, res) => __awaiter(void 0, void 0, void 0, function* 
             });
             return;
         }
-        if (answer === "node") {
+        if (answer.includes("node")) {
             res.json({
                 prompts: [
                     `Here is an artifact that contains all files of the project visible to you.\nConsider the contents of ALL files in the project.\n\n${node_1.basePrompt}\n\nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n`,
@@ -60,7 +74,14 @@ app.post("/template", (req, res) => __awaiter(void 0, void 0, void 0, function* 
             });
             return;
         }
-        res.status(403).json({ message: "You can't access this" });
+        // Default to react if unclear
+        console.log('Defaulting to react template');
+        res.json({
+            prompts: [
+                `Here is an artifact that contains all files of the project visible to you.\nConsider the contents of ALL files in the project.\n\n${react_1.basePrompt}\n\nHere is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n`,
+            ],
+            uiPrompts: [react_1.basePrompt],
+        });
     }
     catch (error) {
         console.error("Error in /template:", error);
@@ -72,7 +93,7 @@ app.post("/chat", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const messages = req.body.messages;
     try {
         const response = yield groq.chat.completions.create({
-            model: "llama3-8b-8192",
+            model: "llama-3.3-70b-versatile",
             max_tokens: 8000,
             messages: [
                 {
@@ -91,6 +112,7 @@ app.post("/chat", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(500).json({ message: "Internal Server Error" });
     }
 }));
-app.listen(3000, () => {
-    console.log("Server is running on port 3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port :${PORT}`);
 });

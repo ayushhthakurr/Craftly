@@ -27,12 +27,12 @@ function FileNode({ item, depth, onFileClick }: FileNodeProps) {
   return (
     <div className="select-none">
       <div
-        className="flex items-center gap-2 p-2 hover:bg-gray-800 rounded-md cursor-pointer"
-        style={{ paddingLeft: `${depth * 1.5}rem` }}
+        className="group flex items-center gap-2 px-3 py-2 hover:bg-slate-700/40 rounded-lg cursor-pointer transition-all duration-150"
+        style={{ paddingLeft: `${depth * 1.5 + 0.75}rem` }}
         onClick={handleClick}
       >
         {item.type === 'folder' && (
-          <span className="text-gray-400">
+          <span className="text-slate-400 group-hover:text-slate-300 transition-colors">
             {isExpanded ? (
               <ChevronDown className="w-4 h-4" />
             ) : (
@@ -41,11 +41,11 @@ function FileNode({ item, depth, onFileClick }: FileNodeProps) {
           </span>
         )}
         {item.type === 'folder' ? (
-          <FolderTree className="w-4 h-4 text-blue-400" />
+          <FolderTree className="w-4 h-4 text-blue-400 group-hover:text-blue-300 transition-colors" />
         ) : (
-          <File className="w-4 h-4 text-gray-400" />
+          <File className="w-4 h-4 text-slate-400 group-hover:text-slate-300 transition-colors" />
         )}
-        <span className="text-gray-200">{item.name}</span>
+        <span className="text-sm text-slate-200 group-hover:text-white transition-colors font-medium">{item.name}</span>
       </div>
       {item.type === 'folder' && isExpanded && item.children && (
         <div>
