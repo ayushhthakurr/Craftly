@@ -22,13 +22,14 @@ export function Home() {
           <div className="flex justify-center mb-6">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl blur-2xl opacity-50 animate-pulse"></div>
-              <div className="relative flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-2xl">
-                <Wand2 className="w-10 h-10 text-white" />
+              <div className="relative flex items-center justify-center w-20 h-20 rounded-2xl shadow-2xl overflow-hidden">
+                <img src="/Craftly.png" alt="Craftly Logo" className="w-full h-full object-cover" />
               </div>
             </div>
           </div>
           <h1 className="text-5xl font-bold text-white mb-4 tracking-tight">
-            Craftly       </h1>
+            Craftly
+          </h1>
           <p className="text-xl text-slate-300 leading-relaxed">
             Describe your dream website, and watch AI build it instantly
           </p>
@@ -57,7 +58,7 @@ export function Home() {
           </div>
           
           <p className="text-center text-sm text-slate-500">
-            Powered by AI • Built with WebContainer
+            Made by Ayush Thakur
           </p>
         </form>
       </div>
