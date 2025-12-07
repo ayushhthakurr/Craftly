@@ -28,7 +28,7 @@ export function Home() {
             </div>
           </div>
           <h1 className="text-5xl font-bold text-white mb-4 tracking-tight">
-            Craftly\n          </h1>
+            Craftly       </h1>
           <p className="text-xl text-slate-300 leading-relaxed">
             Describe your dream website, and watch AI build it instantly
           </p>
