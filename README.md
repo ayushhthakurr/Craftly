@@ -1,4 +1,4 @@
-# Craftly - AI-Powered Website Generator
+# Craftly :- AI-Powered Website Generator
 
 Craftly is an innovative web application that empowers users to create fully functional websites from natural language prompts. With real-time code editing, live previews, and a seamless user experience, Craftly makes web development accessible and efficient for everyone.
 
