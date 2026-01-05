@@ -122,4 +122,4 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 
 ## 📬 Contact
 
-Crafted with ❤️ by [Ayush Thakur](https://github.com/ayushhthakurr)
+Crafted with ❤️ by [Ayush Thakur](https://github.com/ayushhthakurr) .
