@@ -6,7 +6,7 @@ Craftly is an innovative web application that empowers users to create fully fun
 
 - **AI Website Generation:** Create websites effortlessly from natural language prompts.
 - **Real-Time Code Editing:** Modify generated code instantly with Monaco Editor.
-- **Live Preview:** See your changes reflected in real-time.
+- **Live Preview:** See your changes reflected in real time.
 - **File Management:** Organize your project with a built-in file explorer.
 - **Build Process Visualization:** Understand the step-by-step creation of your website.
 - **WebContainer Technology:** Enjoy instant previews directly in the browser.
